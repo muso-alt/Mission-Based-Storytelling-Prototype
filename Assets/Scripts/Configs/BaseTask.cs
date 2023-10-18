@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Unfrozen
+namespace Unfrozen.Configs
 {
     public class BaseTask : ScriptableObject
     {

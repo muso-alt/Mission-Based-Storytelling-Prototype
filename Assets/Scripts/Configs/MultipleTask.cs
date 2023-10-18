@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Unfrozen
+namespace Unfrozen.Configs
 {
     [CreateAssetMenu(fileName = "Multiple Task", menuName = "Unfrozen/Multiple Task", order = 0)]
     public class MultipleTask : BaseTask
