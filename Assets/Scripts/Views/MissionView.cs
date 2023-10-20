@@ -15,13 +15,9 @@ namespace Unfrozen.Views
         
         public void SetId(string id)
         {
-            if (id.Contains('.'))
-            {
-                _tmp.text = id.Split('.')[0];
-                return;
-            }
+            var idText = id.Split('.')[0];
 
-            _tmp.text = id;
+            _tmp.text = idText;
         }
 
         public void SetCompleted()

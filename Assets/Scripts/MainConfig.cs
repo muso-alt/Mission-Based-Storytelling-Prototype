@@ -2,6 +2,7 @@
 using System.IO;
 using Sirenix.OdinInspector;
 using Unfrozen.Tasks;
+using Unfrozen.Views;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,19 +12,30 @@ namespace Unfrozen
     public class MainConfig : ScriptableObject
     {
         [SerializeField] private string _url;
+        [SerializeField] private MissionView _view;
         [SerializeField] private List<Mission> _tasks;
+
+        private bool _isLoading;
+        public List<Mission> Missions => _tasks;
+
+        public MissionView View => _view;
 
         [Button]
         private async void SyncTasks()
         {
-            var hasSubMission = false;
+            if (_isLoading)
+            {
+                return;
+            }
+
+            _isLoading = true;
             
-            foreach (var mission in _tasks)
+            foreach (var mission in Missions)
             {
                 AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(mission));
             }
             
-            _tasks.Clear();
+            Missions.Clear();
 
             var dataProvider = new GoogleSheetsDataProvider();
             await dataProvider.InitializeAsync(_url);
@@ -42,8 +54,6 @@ namespace Unfrozen
                 missionAsset.Id = currentIndex;
                 
                 missionAsset.AddInfo(data);
-
-                Debug.Log(data.Id + " : " + data.Name + " : " + splitTask.Length);
 
                 if (splitTask.Length > 1)
                 {
@@ -64,7 +74,7 @@ namespace Unfrozen
                     }
                 }
                 
-                _tasks.Add(missionAsset);
+                Missions.Add(missionAsset);
 
                 AssetDatabase.CreateAsset(missionAsset, Path.Combine("Assets/Configs", $"{splitTask[0]}.asset"));
 
@@ -72,6 +82,8 @@ namespace Unfrozen
 
                 AssetDatabase.Refresh();
             }
+
+            _isLoading = false;
         }
     }
 }

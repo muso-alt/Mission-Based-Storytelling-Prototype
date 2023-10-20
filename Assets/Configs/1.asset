@@ -51,5 +51,5 @@ MonoBehaviour:
     RequiredMissions: []
     InactiveMissions:
     - 
-    Position: {x: 9, y: 1}
+    Position: {x: -15, y: -435}
   Id: 1

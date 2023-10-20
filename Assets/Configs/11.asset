@@ -45,5 +45,5 @@ MonoBehaviour:
       - 10
     InactiveMissions:
     - 
-    Position: {x: 12, y: 8}
+    Position: {x: -3, y: 448}
   Id: 11
