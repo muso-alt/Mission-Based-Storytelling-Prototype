@@ -3,8 +3,8 @@
     public enum MissionState
     {
         Active,
-        Locked,
+        Blocked,
         Inactive,
-        Completed
+        Passed
     }
 }

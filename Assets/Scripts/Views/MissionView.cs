@@ -32,6 +32,14 @@ namespace Unfrozen.Views
         
         public void SetLockState(bool state)
         {
+            if (state)
+            {
+                _missionImage.color = Color.gray;
+            }
+            else
+            {
+                _missionImage.color = Color.white;
+            }
             _missionButton.interactable = !state;
         }
     }
