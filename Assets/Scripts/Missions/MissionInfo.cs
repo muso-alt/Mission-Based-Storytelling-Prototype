@@ -11,8 +11,8 @@ namespace Unfrozen.Tasks
         public string Name;
         public string PreviewText;
         public string MainText;
-        public string[] FriendlySideText;
-        public string[] OppositeSideText;
+        public string[] ProtagonistSideText;
+        public string[] AntagonistSideText;
         public string[] CharactersToUnlock;
         public Dictionary<string, int> HeroPoints;
         public List<StringList> RequiredMissions;

@@ -1,28 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Unfrozen.Models;
 using Unfrozen.Tasks;
 using Unfrozen.Views;
-using UnityEngine;
 using VContainer.Unity;
+using Object = UnityEngine.Object;
 
 namespace Unfrozen.Controllers
 {
-    public class MissionsController : IInitializable
+    public class MissionsMapController : IInitializable, IDisposable
     {
         private readonly MainConfig _mainConfig;
         private readonly MainScreenView _screenView;
+        private readonly MissionsModel _missionsModel;
         private readonly Dictionary<Mission, MissionView> _missions = new Dictionary<Mission, MissionView>();
         private readonly Dictionary<string, string> _subMissions = new Dictionary<string, string>();
         private readonly List<string> _passedMissions = new List<string>();
 
-        public MissionsController(MainConfig mainConfig, MainScreenView screenView)
+        public MissionsMapController(MainConfig mainConfig,
+            MainScreenView screenView, MissionsModel missionsModel)
         {
             _mainConfig = mainConfig;
             _screenView = screenView;
+            _missionsModel = missionsModel;
         }
         
         public void Initialize()
         {
+            //TODO: Must change to action mission end, if add gameplay system
+            _missionsModel.MissionStarted += MissionCompleted;
+            
             foreach (var mission in _mainConfig.Missions)
             {
                 var view = Object.Instantiate(_mainConfig.View, _screenView.PointsContent);
@@ -36,6 +44,11 @@ namespace Unfrozen.Controllers
             }
             
             UpdateMissionsState();
+        }
+        
+        public void Dispose()
+        {
+            _missionsModel.MissionStarted -= MissionCompleted;
         }
 
         private void SetSubMissions(Mission mission)
@@ -123,9 +136,26 @@ namespace Unfrozen.Controllers
 
         private void MissionClicked(Mission mission)
         {
-            _passedMissions.Add(mission.Infos[0].Id);
-            _missions[mission].SetCompleted();
-            _missions[mission].SetLockState(true);
+            _missionsModel.InvokeMissionSelect(mission.Infos);
+        }
+
+        private void MissionCompleted()
+        {
+            var info = _missionsModel.ActiveMissionInfo;
+            _passedMissions.Add(info.Id);
+
+            foreach (var (mission, view) in _missions)
+            {
+                if (!mission.Infos.Contains(info))
+                {
+                    continue;
+                }
+                
+                view.SetCompleted();
+                view.SetLockState(true);
+                break;
+            }
+            
             UpdateMissionsState();
         }
     }

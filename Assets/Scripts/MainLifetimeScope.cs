@@ -1,4 +1,5 @@
 ﻿using Unfrozen.Controllers;
+using Unfrozen.Models;
 using Unfrozen.Views;
 using UnityEngine;
 using VContainer;
@@ -15,7 +16,9 @@ namespace Unfrozen
         {
             builder.RegisterComponent(_mainScreenView);
             builder.RegisterComponent(_mainConfig);
-            builder.RegisterEntryPoint<MissionsController>();
+            builder.RegisterEntryPoint<MissionsMapController>();
+            builder.RegisterEntryPoint<MissionController>();
+            builder.Register<MissionsModel>(Lifetime.Singleton);
         }
     }
 }
