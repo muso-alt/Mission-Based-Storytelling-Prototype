@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unfrozen.Tasks;
+using Unfrozen.Configs;
 
 namespace Unfrozen.Models
 {
@@ -8,7 +8,7 @@ namespace Unfrozen.Models
     {
         public readonly List<MissionInfo> CurrentSelectedMissionInfos = new List<MissionInfo>();
 
-        public MissionInfo ActiveMissionInfo;
+        public MissionInfo ActiveMissionInfo { get; private set; }
         
         public event Action MissionStarted = delegate { };
         public event Action MissionSelected = delegate { };

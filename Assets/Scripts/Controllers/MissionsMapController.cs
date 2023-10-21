@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unfrozen.Configs;
 using Unfrozen.Models;
-using Unfrozen.Tasks;
 using Unfrozen.Views;
 using VContainer.Unity;
 using Object = UnityEngine.Object;
@@ -14,7 +14,7 @@ namespace Unfrozen.Controllers
         private readonly MainConfig _mainConfig;
         private readonly MainScreenView _screenView;
         private readonly MissionsModel _missionsModel;
-        private readonly Dictionary<Mission, MissionView> _missions = new Dictionary<Mission, MissionView>();
+        private readonly Dictionary<MissionConfig, MissionView> _missions = new Dictionary<MissionConfig, MissionView>();
         private readonly Dictionary<string, string> _subMissions = new Dictionary<string, string>();
         private readonly List<string> _passedMissions = new List<string>();
 
@@ -28,13 +28,13 @@ namespace Unfrozen.Controllers
         
         public void Initialize()
         {
-            //TODO: Must change to action mission end, if add gameplay system
+            //TODO: Must change to action missionConfig end, if add gameplay system
             _missionsModel.MissionStarted += MissionCompleted;
             
             foreach (var mission in _mainConfig.Missions)
             {
                 var view = Object.Instantiate(_mainConfig.View, _screenView.PointsContent);
-                view.SetId(mission.Id);
+                view.SetId(mission.ID);
                 view.transform.localPosition = mission.Position;
                 SetSubMissions(mission);
 
@@ -51,13 +51,13 @@ namespace Unfrozen.Controllers
             _missionsModel.MissionStarted -= MissionCompleted;
         }
 
-        private void SetSubMissions(Mission mission)
+        private void SetSubMissions(MissionConfig missionConfig)
         {
-            foreach (var info in mission.Infos)
+            foreach (var info in missionConfig.Infos)
             {
                 foreach (var inactiveMission in info.InactiveMissions)
                 {
-                    _subMissions[info.Id] = inactiveMission;
+                    _subMissions[info.MissionID] = inactiveMission;
                 }
             }
         }
@@ -90,11 +90,11 @@ namespace Unfrozen.Controllers
             }
         }
 
-        private MissionState GetMissionState(Mission mission)
+        private MissionState GetMissionState(MissionConfig missionConfig)
         {
             var passed = MissionState.Blocked;
             
-            foreach (var info in mission.Infos)
+            foreach (var info in missionConfig.Infos)
             {
                 passed = info.RequiredMissions.Count == 0 ? MissionState.Active : MissionState.Blocked;
 
@@ -113,7 +113,7 @@ namespace Unfrozen.Controllers
                 {
                     foreach (var (id, subId) in _subMissions)
                     {
-                        if (!subId.Equals(info.Id))
+                        if (!subId.Equals(info.MissionID))
                         {
                             continue;
                         }
@@ -123,7 +123,7 @@ namespace Unfrozen.Controllers
                     }
                 }
 
-                if (_passedMissions.Contains(info.Id))
+                if (_passedMissions.Contains(info.MissionID))
                 {
                     passed = MissionState.Passed;
                     break;
@@ -133,15 +133,15 @@ namespace Unfrozen.Controllers
             return passed;
         }
 
-        private void MissionClicked(Mission mission)
+        private void MissionClicked(MissionConfig missionConfig)
         {
-            _missionsModel.InvokeMissionSelect(mission.Infos);
+            _missionsModel.InvokeMissionSelect(missionConfig.Infos);
         }
 
         private void MissionCompleted()
         {
             var info = _missionsModel.ActiveMissionInfo;
-            _passedMissions.Add(info.Id);
+            _passedMissions.Add(info.MissionID);
 
             foreach (var (mission, view) in _missions)
             {

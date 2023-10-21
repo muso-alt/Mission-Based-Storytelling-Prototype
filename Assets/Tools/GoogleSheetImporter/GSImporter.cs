@@ -43,17 +43,13 @@ namespace GoogleSheetImporter.Editor
 
         private string GetStringFormat(FileFormat format)
         {
-            switch (format)
+            return format switch
             {
-                case FileFormat.csv:
-                    return "csv";
-                case FileFormat.tsv:
-                    return "tsv";
-                case FileFormat.ods:
-                    return "ods";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(format), format, null);
-            }
+                FileFormat.csv => "csv",
+                FileFormat.tsv => "tsv",
+                FileFormat.ods => "ods",
+                _ => throw new ArgumentOutOfRangeException(nameof(format), format, null)
+            };
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Unfrozen.Models;
-using Unfrozen.Tasks;
+using Unfrozen.Configs;
 using Unfrozen.Views;
 using UnityEngine;
 using VContainer.Unity;
@@ -12,14 +12,17 @@ namespace Unfrozen.Controllers
     public class MissionController : IInitializable, IDisposable
     {
         private readonly MissionsModel _missionsModel;
+        private readonly HeroesModel _heroesModel;
         private readonly MissionPanelView _panelView;
 
         private int _currentIndex;
         private List<MissionInfo> _infos;
 
-        public MissionController(MissionsModel missionsModel, MainScreenView screenView)
+        public MissionController(MissionsModel missionsModel, 
+            MainScreenView screenView, HeroesModel heroesModel)
         {
             _missionsModel = missionsModel;
+            _heroesModel = heroesModel;
             _panelView = screenView.MissionPanel;
         }
         
@@ -47,6 +50,7 @@ namespace Unfrozen.Controllers
         private void Show()
         {
             UpdateView();
+            ToggleStartButtonState(true);
             _panelView.gameObject.SetActive(true);
         }
 
@@ -54,19 +58,20 @@ namespace Unfrozen.Controllers
         {
             _infos = _missionsModel.CurrentSelectedMissionInfos;
             
-            _panelView.SetMissionText(_infos[_currentIndex].Name);
+            _panelView.SetMissionText(_infos[_currentIndex].MissionName);
             SetProtagonistText(_infos[_currentIndex].ProtagonistSideText);
             SetAntagonistText(_infos[_currentIndex].AntagonistSideText);
             _panelView.SetDescriptionText(_infos[_currentIndex].PreviewText);
-            UpdateMissionVariants();
             
-            ToggleStartButtonState(true);
+            UpdateMissionVariants();
         }
 
         private void UpdateStatusAfterPass()
         {
             _panelView.SetDescriptionText(_infos[_currentIndex].MainText);
             ToggleStartButtonState(false);
+            _panelView.BackButton.gameObject.SetActive(false);
+            _panelView.NextButton.gameObject.SetActive(false);
         }
 
         private void ToggleStartButtonState(bool value)
@@ -119,23 +124,28 @@ namespace Unfrozen.Controllers
         
         private void SetProtagonistText(string[] texts)
         {
-            var heroes = GetHeroesAppend(texts);
+            var heroes = GetSideAppend(texts, false);
 
             _panelView.SetProtagonistText("За кого играем: " + heroes);
         }
         
         private void SetAntagonistText(string[] texts)
         {
-            var heroes = GetHeroesAppend(texts);
+            var heroes = GetSideAppend(texts, true);
 
             _panelView.SetAntagonistText("Против кого играем: " + heroes);
         }
 
-        private string GetHeroesAppend(string[] texts)
+        private string GetSideAppend(IEnumerable<string> texts, bool against)
         {
             var builder = new StringBuilder();
             foreach (var text in texts)
             {
+                if (text.Contains("или"))
+                {
+                    var sides = text.Split("или");
+                    
+                }
                 builder.Append(text + ", ");
             }
 
