@@ -7,6 +7,7 @@ namespace Unfrozen.Models
     public class MissionsModel
     {
         public readonly List<MissionInfo> CurrentSelectedMissionInfos = new List<MissionInfo>();
+        public readonly List<string> PassedMissions = new List<string>();
 
         public MissionInfo ActiveMissionInfo { get; private set; }
         

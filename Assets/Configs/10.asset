@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c21084f3ea3e4e0da84620bbddd16656, type: 3}
   m_Name: 10
   m_EditorClassIdentifier: 
+  _id: 10
   _missionInfos:
   - _missionID: 10
     _missionName: "\u0421\u0438\u043C\u0443\u0440\u0433 \u043F\u0440\u043E\u0441\u043D\u0443\u043B\u0441\u044F"
@@ -52,4 +53,3 @@ MonoBehaviour:
     _inactiveMissions:
     - 
     _missionPosition: {x: 94, y: 229}
-  Id: 10

@@ -122,34 +122,68 @@ namespace Unfrozen.Controllers
             UpdateView();
         }
         
-        private void SetProtagonistText(string[] texts)
+        private void SetProtagonistText(IReadOnlyList<string> texts)
         {
             var heroes = GetSideAppend(texts, false);
 
             _panelView.SetProtagonistText("За кого играем: " + heroes);
         }
         
-        private void SetAntagonistText(string[] texts)
+        private void SetAntagonistText(IReadOnlyList<string> texts)
         {
             var heroes = GetSideAppend(texts, true);
 
             _panelView.SetAntagonistText("Против кого играем: " + heroes);
         }
 
-        private string GetSideAppend(IEnumerable<string> texts, bool against)
+        private string GetSideAppend(IReadOnlyList<string> texts, bool isAgainst)
         {
             var builder = new StringBuilder();
-            foreach (var text in texts)
+            var count = texts.Count;
+
+            for (var i = 0; i < count; i++)
             {
-                if (text.Contains("или"))
+                var fullString = GetSideByPass(texts[i], isAgainst);
+
+                if (string.IsNullOrEmpty(fullString))
                 {
-                    var sides = text.Split("или");
-                    
+                    continue;
                 }
-                builder.Append(text + ", ");
+                
+                if (i < count - 1)
+                {
+                    fullString += ", ";
+                }
+
+                builder.Append(fullString);
             }
 
             return builder.ToString();
+        }
+
+        private string GetSideByPass(string text, bool isAgainst)
+        {
+            if (!text.Contains(":"))
+            {
+                return text;
+            }
+
+            var sides = text.Split(":");
+            var id = sides[1].Replace(" ", "");
+            text = sides[0];
+
+            var passed = _missionsModel.PassedMissions.Contains(id);
+
+            //Big brain moment...
+            if (isAgainst && passed)
+            {
+                text = string.Empty;
+            }else if (!isAgainst && !passed)
+            {
+                text = string.Empty;
+            }
+
+            return text;
         }
 
         private void StartMission()

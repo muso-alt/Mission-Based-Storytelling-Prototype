@@ -6,9 +6,8 @@ namespace Unfrozen.Configs
     [CreateAssetMenu(fileName = nameof(MissionConfig), menuName = "Unfrozen/" + nameof(MissionConfig), order = 0)]
     public class MissionConfig : ScriptableObject
     {
-        [SerializeField] private List<MissionInfo> _missionInfos;
-        
         [SerializeField] private string _id;
+        [SerializeField] private List<MissionInfo> _missionInfos;
 
         public List<MissionInfo> Infos => _missionInfos;
         public Vector2 Position => Infos[0].MissionPosition;

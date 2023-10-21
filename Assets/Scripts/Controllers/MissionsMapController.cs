@@ -16,7 +16,6 @@ namespace Unfrozen.Controllers
         private readonly MissionsModel _missionsModel;
         private readonly Dictionary<MissionConfig, MissionView> _missions = new Dictionary<MissionConfig, MissionView>();
         private readonly Dictionary<string, string> _subMissions = new Dictionary<string, string>();
-        private readonly List<string> _passedMissions = new List<string>();
 
         public MissionsMapController(MainConfig mainConfig,
             MainScreenView screenView, MissionsModel missionsModel)
@@ -101,7 +100,7 @@ namespace Unfrozen.Controllers
                 foreach (var stringList in info.RequiredMissions)
                 {
                     passed = stringList.Items.Any(item =>
-                        _passedMissions.Contains(item)) ? MissionState.Active : MissionState.Blocked;
+                        _missionsModel.PassedMissions.Contains(item)) ? MissionState.Active : MissionState.Blocked;
 
                     if (passed == MissionState.Blocked)
                     {
@@ -118,12 +117,12 @@ namespace Unfrozen.Controllers
                             continue;
                         }
 
-                        passed = _passedMissions.Contains(id) ? MissionState.Active : MissionState.Inactive;
+                        passed = _missionsModel.PassedMissions.Contains(id) ? MissionState.Active : MissionState.Inactive;
                         break;
                     }
                 }
 
-                if (_passedMissions.Contains(info.MissionID))
+                if (_missionsModel.PassedMissions.Contains(info.MissionID))
                 {
                     passed = MissionState.Passed;
                     break;
@@ -141,7 +140,7 @@ namespace Unfrozen.Controllers
         private void MissionCompleted()
         {
             var info = _missionsModel.ActiveMissionInfo;
-            _passedMissions.Add(info.MissionID);
+            _missionsModel.PassedMissions.Add(info.MissionID);
 
             foreach (var (mission, view) in _missions)
             {

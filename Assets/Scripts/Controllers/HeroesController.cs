@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unfrozen.Configs;
 using Unfrozen.Models;
 using Unfrozen.Views;
+using UnityEngine;
 using VContainer.Unity;
 using Object = UnityEngine.Object;
 
@@ -68,10 +69,24 @@ namespace Unfrozen.Controllers
             
             foreach (var hero in info.CharactersToUnlock)
             {
-                if (!string.IsNullOrEmpty(hero))
+                if (string.IsNullOrEmpty(hero))
                 {
-                    _heroesModel.AddHeroToPool(hero);
+                    continue;
                 }
+
+                if (hero.Contains("или"))
+                {
+                    var splits = hero.Split("или");
+                    foreach (var split in splits)
+                    {
+                        var withoutSpace = split.Replace(" ", "");
+                        _heroesModel.AddHeroToPool(withoutSpace);
+                    }
+                    
+                    continue;
+                }
+                
+                _heroesModel.AddHeroToPool(hero);
             }
 
             foreach (var (id, score) in info.HeroPoints)
