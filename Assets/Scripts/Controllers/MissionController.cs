@@ -29,13 +29,19 @@ namespace Unfrozen.Controllers
             _missionsModel.MissionStarted += UpdateStatusAfterPass;
             _panelView.StartButton.onClick.AddListener(StartMission);
             _panelView.HideButton.onClick.AddListener(Hide);
+            
+            _panelView.BackButton.onClick.AddListener(PreviousVariant);
+            _panelView.NextButton.onClick.AddListener(NextVariant);
         }
         
         public void Dispose()
         {
             _missionsModel.MissionSelected -= Show;
+            _missionsModel.MissionStarted -= UpdateStatusAfterPass;
             _panelView.StartButton.onClick.RemoveAllListeners();
             _panelView.HideButton.onClick.RemoveAllListeners();
+            _panelView.BackButton.onClick.RemoveAllListeners();
+            _panelView.NextButton.onClick.RemoveAllListeners();
         }
 
         private void Show()
@@ -52,13 +58,21 @@ namespace Unfrozen.Controllers
             SetProtagonistText(_infos[_currentIndex].ProtagonistSideText);
             SetAntagonistText(_infos[_currentIndex].AntagonistSideText);
             _panelView.SetDescriptionText(_infos[_currentIndex].PreviewText);
+            UpdateMissionVariants();
+            
+            ToggleStartButtonState(true);
         }
 
         private void UpdateStatusAfterPass()
         {
             _panelView.SetDescriptionText(_infos[_currentIndex].MainText);
-            _panelView.StartButton.interactable = false;
-            _panelView.StartButton.image.color = Color.green;
+            ToggleStartButtonState(false);
+        }
+
+        private void ToggleStartButtonState(bool value)
+        {
+            _panelView.StartButton.interactable = value;
+            _panelView.StartButton.image.color = value ? Color.white : Color.green;
         }
         
         private void Hide()
@@ -66,6 +80,41 @@ namespace Unfrozen.Controllers
             _panelView.gameObject.SetActive(false);
             _currentIndex = 0;
             _infos = null;
+        }
+
+        private void UpdateMissionVariants()
+        {
+            if (_infos.Count <= 1)
+            {
+                _panelView.BackButton.gameObject.SetActive(false);
+                _panelView.NextButton.gameObject.SetActive(false);
+                return;
+            }
+
+            _panelView.BackButton.gameObject.SetActive(_currentIndex > 0);
+            _panelView.NextButton.gameObject.SetActive(_currentIndex < _infos.Count - 1);
+        }
+
+        private void NextVariant()
+        {
+            if (_currentIndex >= _infos.Count)
+            {
+                return;
+            }
+            
+            _currentIndex++;
+            UpdateView();
+        }
+
+        private void PreviousVariant()
+        {
+            if (_currentIndex <= 0)
+            {
+                return;
+            }
+            
+            _currentIndex--;
+            UpdateView();
         }
         
         private void SetProtagonistText(string[] texts)
@@ -79,7 +128,7 @@ namespace Unfrozen.Controllers
         {
             var heroes = GetHeroesAppend(texts);
 
-            _panelView.SetProtagonistText("Против кого играем: " + heroes);
+            _panelView.SetAntagonistText("Против кого играем: " + heroes);
         }
 
         private string GetHeroesAppend(string[] texts)

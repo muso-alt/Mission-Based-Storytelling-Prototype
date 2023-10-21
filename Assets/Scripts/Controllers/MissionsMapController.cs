@@ -84,7 +84,6 @@ namespace Unfrozen.Controllers
                         break;
                     case MissionState.Passed:
                         view.SetActive(true);
-                        view.SetLockState(false);
                         view.SetCompleted();
                         break;
                 }

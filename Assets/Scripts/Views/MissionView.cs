@@ -23,6 +23,7 @@ namespace Unfrozen.Views
         public void SetCompleted()
         {
             _missionImage.color = Color.green;
+            _missionButton.interactable = false;
         }
 
         public void SetActive(bool state)

@@ -47,9 +47,9 @@ MonoBehaviour:
       \u043C\u0443\u0434\u0440\u044B\u0439 \u0441\u0442\u0430\u0440\u044B\u0439 \u0421\u043E\u0432\u0443\u0445,
       \u043D\u043E \u043E\u043D \u0441\u043F\u0438\u0442 \u0433\u043B\u0443\u0431\u043E\u043A\u043E
       \u0432 \u0427\u0430\u0449\u0435."
-    FriendlySideText:
+    ProtagonistSideText:
     - "\u0421\u043E\u0432\u044B"
-    OppositeSideText:
+    AntagonistSideText:
     - "\u0412\u043E\u0440\u043E\u043D\u044B"
     CharactersToUnlock:
     - 
@@ -95,9 +95,9 @@ MonoBehaviour:
       \u0441\u0435\u043C\u044C\u044F \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437
       \u0412\u043E\u0440\u043E\u043D\u043E\u0432, \u043D\u043E \u043E\u043D \u043D\u0435
       \u0443\u0447\u0430\u0441\u0442\u0432\u043E\u0432\u0430\u043B \u0432 \u043D\u0430\u043B\u0451\u0442\u0435."
-    FriendlySideText:
+    ProtagonistSideText:
     - "\u0412\u043E\u0440\u043E\u043D\u044B"
-    OppositeSideText:
+    AntagonistSideText:
     - "\u0421\u043E\u0432\u044B"
     CharactersToUnlock:
     - 
